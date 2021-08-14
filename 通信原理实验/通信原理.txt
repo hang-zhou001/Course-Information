@@ -1,0 +1,146 @@
+1.1
+clear; % 清空工作空间内的变量
+td=1/100000; 
+t=0:td:1; 
+x1=square(2*pi*40*t,25); x2=square(2*pi*40*t,50); x3=square(2*pi*40*t,75); % 信号函数的调用
+subplot(311); % 设置 3 行 1 列的作图区，并在第 1 区作图
+plot(t,x1); 
+title('占空比 25%'); axis([0 0.2 -1.5 1.5]); % 限定坐标轴的范围
+subplot(312); plot(t,x2);
+title('占空比 50%'); axis([0 0.2 -1.5 1.5]); 
+subplot(313); plot(t,x3); 
+title('占空比 75%'); axis([0 0.2 -1.5 1.5]); 
+
+1.2
+t=-4:0.0001:4; 
+T=4; % 设置信号宽度
+x1=2*rectpuls(t,T); % 信号函数调用
+subplot(121); plot(t,x1); 
+title('x(t)'); axis([-4 6 0 2.2]); 
+x2=2*rectpuls(t-T/2,T); % 信号函数调用
+subplot(122); plot(t,x2); 
+title('x(t-T/2)'); axis([-4 6 0 2.2]);
+
+1.3
+clear; % 清理变量
+t=-1:0.001:1;
+y=sinc(2*pi*t); % 信号函数调用
+plot(t,y); 
+xlabel('时间 t'); ylabel('幅值(y)'); 
+title('抽样信号'); 
+
+1.4
+T = 0:1/50E3:10E-3;
+D = [0:1/1E3:10E-3;0.8.^(0:10)]';
+Y = pulstran(T,D,'gauspuls',10E4,0.8);
+plot(T,Y)
+
+2.1
+dt = 0.001; % 时间变量变化步长
+T =2; % 定义信号的周期
+t =-4:dt:4; % 定义信号的时间变化范围
+w0 = 2*pi/T; % 定义信号的频率
+x1=rectpuls( t-0.5-dt,1); % 产生 1 个周期的方波信号
+x=0; 
+for m = -1:1 % 扩展 1 个周期的方波信号
+ x = x+rectpuls((t-0.5-m*T-dt),1); % 产生周期方波信号
+end 
+subplot(221); 
+plot(t,x); 
+axis([-4 4 0 1.1]); % 设定坐标变化范围
+title('周期方波信号') 
+N=10; % 定义需要计算的谐波次数为 10 
+for k=-N : N 
+ ak(N+1+k) = x1*exp(-j*k*w0*t') *dt/T; % 求得 Fourier 系数 ak 
+end 
+k=-N:N; 
+subplot(212); 
+stem(k,abs(ak),'k.'); % 绘制幅度谱
+title('傅里叶级数'); 
+
+2.2
+width=1; 
+t=-5:0.01:5; 
+y=rectpuls(t,width); % 矩形脉冲信号
+subplot(221); 
+plot(t,y); 
+ylim([-1 2]); % 限定 y 坐标的范围
+title('矩形脉冲信号'); 
+Y=fft(y,1024); % 快速 Fourier 变换
+Y1=fftshift(Y); % 将频谱分量集中
+subplot(212); 
+plot(abs(Y1)); 
+title('傅里叶变换');
+
+3.1
+% AM 基带信号
+dt=0.001; % 采样时间间隔
+fs=1; % 基带信号频率
+fc=10; % 载波频率
+T=5; % 调制信号的时间长度
+N=T/dt; % 采样点总数
+t=[0:N-1]*dt; % 采样时间变量
+mt=sqrt(2)*cos(2*pi*fs*t); % 基带信号时域表达式
+% AM 调制信号
+A0=2; % 直流偏移量
+s_AM=(A0+mt).*cos(2*pi*fc*t); % AM 调制信号
+% PSD 计算
+[X]=fft(s_AM); % 对 AM 调制信号进行快速 Fourier 变换
+[Y]=fft(mt); % 对基带信号进行快速 Fourier 变换
+PSD_X=(abs(X).^2)/T; % 根据功率谱密度公式计算 AM 调制信号的 PSD 
+PSD=(abs(Y).^2)/T; % 根据功率谱密度公式计算基带信号的 PSD 
+PSD_Y=fftshift(PSD); % 将零频分量移到频谱的中心位置
+PSD_X_dB = 10*log10(PSD_X); % 将功率化为以 dB 为单位
+PSD_Y_dB = 10*log10(PSD_Y); % 将功率化为以 dB 为单位
+f=[-N/2:N/2-1]*2*fc/N; % 设置频率变量
+% 绘图输出
+subplot(311); 
+plot(t,s_AM); hold on; 
+plot(t,A0+mt,'r--'); % 绘制包括线
+title('AM 调制信号及其包络'); 
+subplot(312); 
+plot(f,PSD_Y_dB); hold on; 
+axis([-2*fc 2*fc 0 max(PSD_Y_dB)]); 
+title('基带信号的 PSD(dB)'); 
+subplot(313); 
+plot(f,PSD_X_dB); hold on; 
+axis([-2*fc 2*fc 0 max(PSD_X_dB)]); 
+title('AM 调制信号的 PSD(dB)'); 
+
+
+
+3.2
+
+dt=0.001; % 采样时间间隔
+fs=1; % 基带信号频率
+fc=10; % 载波频率
+T=5; % 调制信号的时间长度
+N=T/dt; % 采样点总数
+t=[0:N-1]*dt; % 采样时间变量
+mt=sqrt(2)*cos(2*pi*fs*t); % 基带信号时域表达式
+
+A0=0; % 直流偏移量
+s_AM=(A0+mt).*cos(2*pi*fc*t); % AM 调制信号
+% PSD 计算
+[X]=fft(s_AM); % 对 AM 调制信号进行快速 Fourier 变换
+[Y]=fft(mt); % 对基带信号进行快速 Fourier 变换
+PSD_X=(abs(X).^2)/T; % 根据功率谱密度公式计算 AM 调制信号的 PSD 
+PSD=(abs(Y).^2)/T; % 根据功率谱密度公式计算基带信号的 PSD 
+PSD_Y=fftshift(PSD); % 将零频分量移到频谱的中心位置
+PSD_X_dB = 10*log10(PSD_X); % 将功率化为以 dB 为单位
+PSD_Y_dB = 10*log10(PSD_Y); % 将功率化为以 dB 为单位
+f=[-N/2:N/2-1]*2*fc/N; % 设置频率变量
+% 绘图输出
+subplot(311); 
+plot(t,s_AM); hold on; 
+plot(t,A0+mt,'r--'); % 绘制包括线
+title('抑制载波双边带(DSB-SC)调制信号及其包络'); 
+subplot(312); 
+plot(f,PSD_Y_dB); hold on; 
+axis([-2*fc 2*fc 0 max(PSD_Y_dB)]); 
+title('基带信号的 PSD(dB)'); 
+subplot(313); 
+plot(f,PSD_X_dB); hold on; 
+axis([-2*fc 2*fc 0 max(PSD_X_dB)]); 
+title('抑制载波双边带(DSB-SC)调制信号的PSD(dB)'); 
+
