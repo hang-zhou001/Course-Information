@@ -1,0 +1,5 @@
+﻿  源1.cpp
+D:\visual studio 练习\查找（哈希表）\查找（哈希表）\源1.cpp(13,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\visual studio 练习\查找（哈希表）\查找（哈希表）\源1.cpp(84,8): warning C4477: “scanf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“std::string”
+D:\visual studio 练习\查找（哈希表）\查找（哈希表）\源1.cpp(72): warning C4715: “Search”: 不是所有的控件路径都返回值
+  查找（哈希表）.vcxproj -> D:\visual studio 练习\查找（哈希表）\Debug\查找（哈希表）.exe

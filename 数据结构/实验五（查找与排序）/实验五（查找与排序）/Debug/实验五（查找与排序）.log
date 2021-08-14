@@ -1,0 +1,7 @@
+﻿  源.cpp
+D:\visual studio 练习\实验五（查找与排序）\实验五（查找与排序）\源.cpp(91,8): warning C4477: “scanf”: 格式字符串“%s”需要类型“char *”的参数，但可变参数 1 拥有了类型“std::string”
+  源1.cpp
+  正在生成代码...
+D:\visual studio 练习\实验五（查找与排序）\实验五（查找与排序）\源.cpp(78): warning C4715: “Search”: 不是所有的控件路径都返回值
+源1.obj : error LNK2005: _main 已经在 源.obj 中定义
+D:\visual studio 练习\实验五（查找与排序）\Debug\实验五（查找与排序）.exe : fatal error LNK1169: 找到一个或多个多重定义的符号
